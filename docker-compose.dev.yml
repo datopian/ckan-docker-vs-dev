@@ -15,8 +15,6 @@ services:
     env_file:
       - .env
     depends_on:
-      db:
-        condition: service_healthy
       solr:
         condition: service_healthy
       redis:
@@ -42,8 +40,7 @@ services:
       - WRITE_ENGINE_URL=postgresql://ckandbuser:ckandbpassword@db/datastore
       - SQLALCHEMY_DATABASE_URI=postgresql://ckandbuser:ckandbpassword@db/ckandb
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     ports:
       - "8800:8800"
 
