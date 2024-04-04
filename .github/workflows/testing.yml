@@ -1,6 +1,8 @@
 name: Build and Test
 on:
   push:
+    branches:
+      - master
   pull_request:
     branches:
       - master
@@ -32,7 +34,7 @@ jobs:
           runTests: false
           working-directory: ./integration-tests
       - name: Create sysadmin API for Authorization
-        run: bash ./ckan-backend-dev/ckan/scripts/cypress_setup.sh
+        run: bash ./scripts/cypress_setup.sh
       - name: Print Logs
         run: docker compose -f docker-compose.dev.yml --env-file .env.example logs
       - name: Run Integration tests 🧪
