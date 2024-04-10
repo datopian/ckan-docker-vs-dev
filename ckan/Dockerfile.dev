@@ -37,7 +37,7 @@ RUN pip install -e git+https://github.com/ckan/ckanext-pdfview.git#egg=ckanext-p
     pip install -e git+https://github.com/ckan/ckanext-geoview.git#egg=ckanext-geoview && \
     pip install -r https://raw.githubusercontent.com/ckan/ckanext-geoview/e2a1cc9a323b4433a8312e160875e80c89f82251/pip-requirements.txt && \
     pip install -r https://raw.githubusercontent.com/datopian/ckanext-s3filestore/ckan-2.10/requirements.txt && \
-    pip install -e git+https://github.com/datopian/ckanext-s3filestore.git@ckan-2.10#egg=ckanext-s3filestore && \
+    pip install -e git+https://github.com/datopian/ckanext-s3filestore.git@ckan-2.10#egg=ckanext-s3filestore
 
 
 # Copy custom initialization scripts
