@@ -12,9 +12,6 @@ cd "$script_dir"
 # Generate a token
 token=$(docker exec ckan-vs-dev ckan -c ckan.ini user token add ckan_admin cypress | awk '/API Token created:/ {getline; print $1}' | tr -d '\n' | tr -d '\r')
 
-# Create a Cypress config file from the example
-cp ../integration-tests/cypress.json.example ..//integration-tests/cypress.json
-
 # Replace the token placeholder with the generated token
-sed -i "s/CKAN_API_TOKEN/$token/g" ../integration-tests/cypress.json
+sed -i "s/CKAN_API_TOKEN/$token/g" ../integration-tests/cypress.config.js
 sed -i "s/CKAN_API_TOKEN/$token/g" ../.env.example
