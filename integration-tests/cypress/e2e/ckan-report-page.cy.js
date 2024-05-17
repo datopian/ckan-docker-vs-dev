@@ -17,7 +17,7 @@ describe('Listing of reports', () => {
     cy.visit('/report')
     cy.contains('Reports')
     cy.contains('New Report')
-    cy.contains('Search reports...')
+    cy.contains('Search reports')
     cy.contains('SCDC')
     cy.get('#field-giant-search').type('Main Causes of Death')
     cy.get('button[value="search"]').click({ force: true})
