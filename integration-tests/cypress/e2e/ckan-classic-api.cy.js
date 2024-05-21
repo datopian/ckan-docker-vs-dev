@@ -145,13 +145,14 @@ describe('CKAN Classic API Are Working', () => {
     })
   })
 
-  it('API: Recenty Chnaged Activity List', () => {
-    cy.request({
-      url: '/api/3/action/recently_changed_packages_activity_list',
-      headers: headers
-    }).then((resp) => {
-      expect(resp.body.success).to.eq(true)
-    })
-  })
+  // Removed from CKAN 2.10.4
+  //it('API: Recenty Chnaged Activity List', () => {
+  //  cy.request({
+  //    url: '/api/3/action/recently_changed_packages_activity_list',
+  //    headers: headers
+  //  }).then((resp) => {
+  //    expect(resp.body.success).to.eq(true)
+  //  })
+  //})
   
 })

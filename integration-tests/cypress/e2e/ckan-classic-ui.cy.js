@@ -17,9 +17,23 @@ Cypress.on("uncaught:exception", (err, runnable) => {
 
 describe("CKAN Classic UI", () => {
   beforeEach(function () {
+    const getRandomOrganizationName = () => Math.random().toString(36).slice(2) + Cypress.env("ORG_NAME_SUFFIX");
+    const organizationName = getRandomOrganizationName();
+    cy.wrap(organizationName).as("organizationName");
+
     cy.consentCookies();
     cy.clearCookies();
     cy.login(ckanUserName, ckanUserPassword);
+
+    cy.get("@organizationName").then((organizationName) => {
+      cy.createOrganizationAPI(organizationName);
+    });
+  });
+
+  afterEach(function () {
+    cy.get("@organizationName").then((organizationName) => {
+      cy.deleteOrganizationAPI(organizationName);
+    });
   });
 
   createPackageFromUI();

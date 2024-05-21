@@ -38,8 +38,8 @@ RUN pip install -e git+https://github.com/ckan/ckanext-pdfview.git#egg=ckanext-p
     pip install -r https://raw.githubusercontent.com/ckan/ckanext-geoview/e2a1cc9a323b4433a8312e160875e80c89f82251/pip-requirements.txt && \
     pip install -r https://raw.githubusercontent.com/datopian/ckanext-s3filestore/ckan-2.10/requirements.txt && \
     pip install -e git+https://github.com/datopian/ckanext-s3filestore.git@ckan-2.10#egg=ckanext-s3filestore && \
-    pip install --no-cache-dir -e git+https://github.com/datopian/ckanext-querytool.git@fce96b46b8542f53ced83de006048ef89d15a30a#egg=ckanext-querytool && \
-    pip install -r https://raw.githubusercontent.com/datopian/ckanext-querytool/master/requirements.txt && \
+    pip install --no-cache-dir -e git+https://github.com/datopian/ckanext-querytool.git@dev/admin-page-tests#egg=ckanext-querytool && \
+    pip install -r https://raw.githubusercontent.com/datopian/ckanext-querytool/dev/admin-page-tests/requirements.txt && \
     pip install -e git+https://github.com/datopian/ckanext-gtm.git#egg=ckanext-gtm && \
     pip install -e git+https://github.com/datopian/ckanext-sentry.git@2.10#egg=ckanext-sentry && \
     pip install -r https://raw.githubusercontent.com/datopian/ckanext-sentry/2.10/requirements.txt

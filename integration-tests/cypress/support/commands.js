@@ -24,10 +24,12 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+require("@4tw/cypress-drag-drop");
+
 import "cypress-axe";
 
 const cypressUpload = require("cypress-file-upload");
-const headers = { Authorization: Cypress.env("API_KEY") };
+const headers = { Authorization: Cypress.env("API_KEY"), "Content-Type": "application/json" };
 
 const getRandomDatasetName = () =>
   Math.random().toString(36).slice(2) + Cypress.env("DATASET_NAME_SUFFIX");
@@ -35,7 +37,7 @@ const getRandomOrganizationName = () =>
   Math.random().toString(36).slice(2) + Cypress.env("ORG_NAME_SUFFIX");
 
 const apiUrl = (path) => {
-  return `${Cypress.config().baseUrl}api/3/action/${path}`;
+  return `${Cypress.config("baseUrl")}/api/3/action/${path}`;
 };
 
 function printAccessibilityViolations(violations) {
@@ -126,9 +128,9 @@ Cypress.Commands.add("createDatasetWithoutFile", (name) => {
     cy.get(".page_primary_action > .btn").click();
     cy.get("#field-title").type(datasetName);
     cy.get("#field-author").type("Datopian");
-    cy.get("#field-author_email").type("datopian@datopian.com");
+    cy.get("#field-author-email").type("datopian@datopian.com");
     cy.get("#field-maintainer").type("Datopian");
-    cy.get("#field-maintainer_email").type("datopian@datopian.com");
+    cy.get("#field-maintainer-email").type("datopian@datopian.com");
     cy.get(".btn-xs").click();
     cy.get("#field-name").clear().type(datasetName);
     cy.get('[name="save"]').click({ force: true });
@@ -151,9 +153,9 @@ Cypress.Commands.add("createDataset", (dataset = false, private_vis = true) => {
       cy.get("#field-private").select("False");
     }
     cy.get("#field-author").type("Datopian");
-    cy.get("#field-author_email").type("datopian@datopian.com");
+    cy.get("#field-author-email").type("datopian@datopian.com");
     cy.get("#field-maintainer").type("Datopian");
-    cy.get("#field-maintainer_email").type("datopian@datopian.com");
+    cy.get("#field-maintainer-email").type("datopian@datopian.com");
     cy.get('[name="save"]').click({ force: true });
     cy.get("#field-resource-upload").attachFile({
       filePath: "sample.csv",
@@ -238,7 +240,6 @@ Cypress.Commands.add("createOrganization", () => {
   cy.get("#field-name").clear().type(organizationName);
   cy.get('[name="save"]').click({ force: true });
   cy.location("pathname").should("eq", "/organization/" + organizationName);
-  cy.wrap(organizationName);
 });
 
 Cypress.Commands.add("deleteOrganization", (orgName) => {
