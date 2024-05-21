@@ -46,7 +46,7 @@ jobs:
         if: failure()
         with:
           name: cypress-screenshots
-          path: /home/runner/work/ckan-docker-vs-dev/ckan-docker-vs-dev/e2e-tests/cypress/screenshots
+          path: /home/runner/work/ckan-docker-vs-dev/ckan-docker-vs-dev/integration-tests/cypress/screenshots
           if-no-files-found: ignore
       - name: Print Error Logs
         if: failure()
