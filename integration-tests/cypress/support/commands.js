@@ -29,7 +29,7 @@ require("@4tw/cypress-drag-drop");
 import "cypress-axe";
 
 const cypressUpload = require("cypress-file-upload");
-const headers = { Authorization: Cypress.env("API_KEY") };
+const headers = { Authorization: Cypress.env("API_KEY"), "Content-Type": "application/json" };
 
 const getRandomDatasetName = () =>
   Math.random().toString(36).slice(2) + Cypress.env("DATASET_NAME_SUFFIX");
@@ -240,7 +240,6 @@ Cypress.Commands.add("createOrganization", () => {
   cy.get("#field-name").clear().type(organizationName);
   cy.get('[name="save"]').click({ force: true });
   cy.location("pathname").should("eq", "/organization/" + organizationName);
-  cy.wrap(organizationName).as("organizationName");
 });
 
 Cypress.Commands.add("deleteOrganization", (orgName) => {
