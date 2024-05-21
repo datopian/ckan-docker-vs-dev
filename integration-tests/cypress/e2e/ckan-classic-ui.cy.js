@@ -20,6 +20,13 @@ describe("CKAN Classic UI", () => {
     cy.consentCookies();
     cy.clearCookies();
     cy.login(ckanUserName, ckanUserPassword);
+    cy.createOrganization();
+  });
+
+  afterEach(function () {
+    cy.get("@organizationName").then((orgName) => {
+      cy.deleteOrganization(orgName);
+    });
   });
 
   createPackageFromUI();

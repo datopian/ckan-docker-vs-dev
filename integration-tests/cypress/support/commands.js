@@ -240,7 +240,7 @@ Cypress.Commands.add("createOrganization", () => {
   cy.get("#field-name").clear().type(organizationName);
   cy.get('[name="save"]').click({ force: true });
   cy.location("pathname").should("eq", "/organization/" + organizationName);
-  cy.wrap(organizationName);
+  cy.wrap(organizationName).as("organizationName");
 });
 
 Cypress.Commands.add("deleteOrganization", (orgName) => {
