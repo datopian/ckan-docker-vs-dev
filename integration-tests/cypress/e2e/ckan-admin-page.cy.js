@@ -19,7 +19,7 @@ describe("Admin Config Options", () => {
 
     // Reset changes to default
     cy.get(".form-actions > .btn-danger").click({ force: true });
-    cy.get(".modal-footer > .btn-primary").click({ force: true });
+    cy.get(".btn-primary").click({ force: true });
 
     cy.get("#custom-theme").should("not.be.visible");
     cy.get("#querytool_theme").should("exist");
@@ -128,6 +128,6 @@ describe("Admin Config Options", () => {
     cy.get(".account > .list-unstyled > :nth-child(1) > a").click();
     cy.get(".page-header > .nav > :nth-child(2) > a").click();
     cy.get(".form-actions > .btn-danger").click({ force: true });
-    cy.get(".modal-footer > .btn-primary").click({ force: true });
+    cy.get('.btn-primary').click({ force: true });
   });
 });
