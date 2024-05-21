@@ -37,6 +37,17 @@ jobs:
         run: bash ./scripts/cypress_setup.sh
       - name: Print Logs
         run: docker compose -f docker-compose.dev.yml --env-file .env.example logs
+      - name: Wait for ckan-vs-db to be healthy
+        run: |
+          while ! docker exec ckan-vs-db pg_isready -U ckandbuser -d ckandb; do
+            sleep 1
+          done
+      - name: Copy reports.csv to ckan-vs-db
+        run: docker cp ckan/setup/reports.csv ckan-vs-db:/reports.csv
+      - name: Add Reports
+        run: |
+          docker exec -e PGPASSWORD=ckandbpassword ckan-vs-db psql -U ckandbuser -d ckandb -c "\
+          COPY ckanext_querytool FROM '/reports.csv' DELIMITER ',' CSV HEADER;"
       - name: Run Integration tests 🧪
         uses: cypress-io/github-action@v6
         with:
