@@ -46,8 +46,8 @@ jobs:
         run: docker cp ckan/setup/reports.csv ckan-vs-db:/reports.csv
       - name: Add Reports
         run: |
-          docker exec -e PGPASSWORD=ckandbpassword ckan-vs-db psql -U ckandbuser -d ckandb -c "\
-          COPY ckanext_querytool FROM '/reports.csv' DELIMITER ',' CSV HEADER;"
+          docker exec -e PGPASSWORD=postgres ckan-vs-db psql -U postgres -d ckandb -c "\
+          \copy ckanext_querytool FROM '/reports.csv' DELIMITER ',' CSV HEADER;"
       - name: Run Integration tests 🧪
         uses: cypress-io/github-action@v6
         with:
