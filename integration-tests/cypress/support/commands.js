@@ -248,7 +248,7 @@ Cypress.Commands.add("createGroup", (groupName, relationshipType, relationships)
   if (!groupName) {
     groupName = getRandomGroupName();
   }
-  cy.get(".nav > :nth-child(2) > a").contains("Design Reports").click();
+  cy.contains("Design Reports").click({ force: true });
   cy.get(".btn-primary").contains("Add Group").click();
   cy.get("#field-name").type(groupName);
   cy.get("#field-description").type(`Description for ${groupName}`);
