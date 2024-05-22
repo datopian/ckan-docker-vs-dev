@@ -17,6 +17,7 @@ Cypress.on("uncaught:exception", (err, runnable) => {
 
 describe("Parent/Child Groups", () => {
   beforeEach(function () {
+    cy.viewport(1440, 720)
     cy.consentCookies();
     cy.login(ckanUserName, ckanUserPassword);
   });

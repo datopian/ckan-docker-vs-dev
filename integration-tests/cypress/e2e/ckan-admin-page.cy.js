@@ -8,6 +8,7 @@ Cypress.on("uncaught:exception", (err, runnable) => {
 
 describe("Admin Config Options", () => {
   beforeEach(function () {
+    cy.viewport(1440, 720)
     cy.consentCookies();
     cy.login(ckanUserName, ckanUserPassword);
   });
