@@ -35,6 +35,8 @@ const getRandomDatasetName = () =>
   Math.random().toString(36).slice(2) + Cypress.env("DATASET_NAME_SUFFIX");
 const getRandomOrganizationName = () =>
   Math.random().toString(36).slice(2) + Cypress.env("ORG_NAME_SUFFIX");
+const getRandomGroupName = () =>
+  Math.random().toString(36).slice(2) + Cypress.env("GROUP_NAME_SUFFIX");
 
 const apiUrl = (path) => {
   return `${Cypress.config("baseUrl")}/api/3/action/${path}`;
@@ -240,6 +242,41 @@ Cypress.Commands.add("createOrganization", () => {
   cy.get("#field-name").clear().type(organizationName);
   cy.get('[name="save"]').click({ force: true });
   cy.location("pathname").should("eq", "/organization/" + organizationName);
+});
+
+Cypress.Commands.add("createGroup", (groupName, relationshipType, relationships) => {
+  if (!groupName) {
+    groupName = getRandomGroupName();
+  }
+  cy.visit("/group/new");
+  cy.get("#field-name").type(groupName);
+  cy.get("#field-description").type(`Description for ${groupName}`);
+  cy.get("#field-additional_description").type(`Additional description for ${groupName}`);
+
+  if (relationshipType) {
+    cy.get("#group_relationship_type").select(relationshipType);
+
+    if (relationships) {
+      if (relationshipType === "parent") {
+        for (let i = 0; i < relationships.length; i++) {
+          cy.get("#s2id_autogen1").type(relationships[i])
+          cy.wait(1000)
+          cy.get("#s2id_autogen1").type("{enter}")
+        }
+      } else if (relationshipType === "child") {
+        cy.get("#field-parent").select(relationships);
+      }
+    }
+  }
+
+  cy.get('.btn-primary').contains("Save Group").click({ force: true });
+});
+
+Cypress.Commands.add("deleteGroup", (groupName) => {
+  cy.visit(`/group/edit/${groupName}`)
+
+  cy.get('.btn-danger').contains("Delete").click();
+  cy.get('.btn-primary').contains("Confirm").click();
 });
 
 Cypress.Commands.add("deleteOrganization", (orgName) => {
