@@ -77,4 +77,12 @@ describe("Listing of reports", () => {
     cy.get('button[name="save_data"]').click();
     cy.contains(reportName + " EDITED");
   });
+
+  it("Can delete a report", () => {
+    cy.viewport(1440, 720);
+    cy.visit("/report");
+    cy.contains(reportName + " EDITED").get(".btn").contains("Delete").click();
+    cy.get('.modal-footer > .btn-primary').contains("Confirm").click();
+    cy.contains("Report and visualizations were removed successfully.");
+  });
 });
