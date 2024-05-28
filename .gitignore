@@ -9,3 +9,8 @@ _src/*
 src/*
 local/*
 .env
+
+# remove node_modules
+node_modules/*
+*/node_modules/*
+integration-tests/node_modules/*
