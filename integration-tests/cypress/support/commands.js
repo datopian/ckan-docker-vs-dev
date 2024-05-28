@@ -376,6 +376,26 @@ Cypress.Commands.add("datapusherSubmitAPI", (resourceId) => {
   });
 });
 
+Cypress.Commands.add("datastoreSearchAPI", (resourceId) => {
+  const request = cy.request({
+    method: "POST",
+    url: apiUrl("datastore_search"),
+    headers: headers,
+    body: {
+      resource_id: resourceId,
+    },
+    failOnStatusCode: false
+  }).then((res) => {
+    if (res.status === 200) {
+      return true;
+    } else if (res.status === 404) {
+      return false;
+    } else {
+      throw new Error("Unexpected status code: " + res.status);
+    }
+  });
+});
+
 Cypress.Commands.add("createResourceAPI", (dataset, resource) => {
   const request = cy.request({
     method: "POST",
