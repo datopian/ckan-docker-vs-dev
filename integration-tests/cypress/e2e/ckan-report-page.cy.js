@@ -9,6 +9,7 @@ Cypress.on("uncaught:exception", (err, runnable) => {
 
 const uuid = () => Math.random().toString(36).slice(2) + "-test";
 const org = `${uuid()}${Cypress.env("ORG_NAME_SUFFIX")}`;
+const group = `${uuid()}${Cypress.env("GROUP_NAME_SUFFIX")}`;
 const dataset = `${uuid()}-test-dataset`;
 const reportName = `${uuid()}-report`;
 const resourceId = uuid();
@@ -16,6 +17,7 @@ const resourceId = uuid();
 describe("Listing of reports", () => {
   before(function () {
     cy.createOrganizationAPI(org);
+    cy.createGroupAPI(group);
     cy.createDatasetAPI(org, dataset, {
       resources: [
         {
@@ -90,5 +92,11 @@ describe("Listing of reports", () => {
     cy.contains(reportName + " EDITED").get(".btn").contains("Delete").click();
     cy.get('.modal-footer > .btn-primary').contains("Confirm").click();
     cy.contains("Report and visualizations were removed successfully.");
+  });
+
+  after(function () {
+    cy.deleteDatasetAPI(dataset);
+    cy.deleteGroupAPI(group);
+    cy.deleteOrganizationAPI(org);
   });
 });

@@ -325,15 +325,31 @@ Cypress.Commands.add("deleteOrganizationAPI", (name) => {
   });
 });
 
-Cypress.Commands.add("createGroupAPI", (name) => {
+Cypress.Commands.add("createGroupAPI", (name, relationshipType, relationships) => {
+  const body = {
+    name: name,
+    description: "Some group description",
+    additional_description: "Some additional group description",
+    group_relationship_type: "",
+    parent: "",
+    children: ""
+  };
+
+  if (relationshipType) {
+    body.group_relationship_type = relationshipType;
+  }
+  if (relationships) {
+    if (relationshipType === "parent") {
+      body.children = relationships.join(",");
+    } else if (relationshipType === "child") {
+      body.parent = relationships;
+    }
+  }
   cy.request({
     method: "POST",
     url: apiUrl("group_create"),
     headers: headers,
-    body: {
-      name: name,
-      description: "Some group description",
-    },
+    body: body,
   });
 });
 
