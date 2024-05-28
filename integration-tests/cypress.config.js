@@ -7,7 +7,7 @@ export default defineConfig({
   env: {
     FRONTEND_URL: "",
     API_KEY:
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJZQ24zYmhKT1lVeEM1U0dsUWViMGVBVlZjblNEaERUY3hhVXdsWGtKNVdJIiwiaWF0IjoxNzE2OTEzODQxfQ.RjEoaLro4I_hok81FbBMcAV_6OTc7lpwolBl8Cc0Z5Q",
+      "CKAN_API_TOKEN",
     CKAN_USERNAME: "ckan_admin",
     CKAN_PASSWORD: "test1234",
     ORG_NAME_SUFFIX: "_organization_test",
