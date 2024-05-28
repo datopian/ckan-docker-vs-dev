@@ -39,7 +39,7 @@ services:
     restart: always
     environment:
       - WRITE_ENGINE_URL=postgresql://postgres:postgres@db/datastore
-      - SQLALCHEMY_DATABASE_URI=postgresql://datapusher:ckandbpassword@db/datapusher_jobs
+      - SQLALCHEMY_DATABASE_URI=postgresql://postgres:postgres@db/datapusher_jobs
     depends_on:
       - db
     ports:
