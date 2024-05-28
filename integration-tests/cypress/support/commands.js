@@ -29,7 +29,10 @@ require("@4tw/cypress-drag-drop");
 import "cypress-axe";
 
 const cypressUpload = require("cypress-file-upload");
-const headers = { Authorization: Cypress.env("API_KEY"), "Content-Type": "application/json" };
+const headers = {
+  Authorization: Cypress.env("API_KEY"),
+  "Content-Type": "application/json",
+};
 
 const getRandomDatasetName = () =>
   Math.random().toString(36).slice(2) + Cypress.env("DATASET_NAME_SUFFIX");
@@ -85,11 +88,7 @@ Cypress.Commands.add(
         ...options,
         runOnly: {
           type: "tag",
-          values: [
-            "wcag2aa",
-            "wcag2a",
-            "wcag***",
-          ],
+          values: ["wcag2aa", "wcag2a", "wcag***"],
         },
       },
       printAccessibilityViolations,
@@ -244,39 +243,44 @@ Cypress.Commands.add("createOrganization", () => {
   cy.location("pathname").should("eq", "/organization/" + organizationName);
 });
 
-Cypress.Commands.add("createGroup", (groupName, relationshipType, relationships) => {
-  if (!groupName) {
-    groupName = getRandomGroupName();
-  }
-  cy.visit("/group/new");
-  cy.get("#field-name").type(groupName);
-  cy.get("#field-description").type(`Description for ${groupName}`);
-  cy.get("#field-additional_description").type(`Additional description for ${groupName}`);
+Cypress.Commands.add(
+  "createGroup",
+  (groupName, relationshipType, relationships) => {
+    if (!groupName) {
+      groupName = getRandomGroupName();
+    }
+    cy.visit("/group/new");
+    cy.get("#field-name").type(groupName);
+    cy.get("#field-description").type(`Description for ${groupName}`);
+    cy.get("#field-additional_description").type(
+      `Additional description for ${groupName}`
+    );
 
-  if (relationshipType) {
-    cy.get("#group_relationship_type").select(relationshipType);
+    if (relationshipType) {
+      cy.get("#group_relationship_type").select(relationshipType);
 
-    if (relationships) {
-      if (relationshipType === "parent") {
-        for (let i = 0; i < relationships.length; i++) {
-          cy.get("#s2id_autogen1").type(relationships[i])
-          cy.wait(1000)
-          cy.get("#s2id_autogen1").type("{enter}")
+      if (relationships) {
+        if (relationshipType === "parent") {
+          for (let i = 0; i < relationships.length; i++) {
+            cy.get("#s2id_autogen1").type(relationships[i]);
+            cy.wait(1000);
+            cy.get("#s2id_autogen1").type("{enter}");
+          }
+        } else if (relationshipType === "child") {
+          cy.get("#field-parent").select(relationships);
         }
-      } else if (relationshipType === "child") {
-        cy.get("#field-parent").select(relationships);
       }
     }
-  }
 
-  cy.get('.btn-primary').contains("Save Group").click({ force: true });
-});
+    cy.get(".btn-primary").contains("Save Group").click({ force: true });
+  }
+);
 
 Cypress.Commands.add("deleteGroup", (groupName) => {
-  cy.visit(`/group/edit/${groupName}`)
+  cy.visit(`/group/edit/${groupName}`);
 
-  cy.get('.btn-danger').contains("Delete").click();
-  cy.get('.btn-primary').contains("Confirm").click();
+  cy.get(".btn-danger").contains("Delete").click();
+  cy.get(".btn-primary").contains("Confirm").click();
 });
 
 Cypress.Commands.add("deleteOrganization", (orgName) => {
@@ -321,15 +325,31 @@ Cypress.Commands.add("deleteOrganizationAPI", (name) => {
   });
 });
 
-Cypress.Commands.add("createGroupAPI", (name) => {
+Cypress.Commands.add("createGroupAPI", (name, relationshipType, relationships) => {
+  const body = {
+    name: name,
+    description: "Some group description",
+    additional_description: "Some additional group description",
+    group_relationship_type: "",
+    parent: "",
+    children: ""
+  };
+
+  if (relationshipType) {
+    body.group_relationship_type = relationshipType;
+  }
+  if (relationships) {
+    if (relationshipType === "parent") {
+      body.children = relationships.join(",");
+    } else if (relationshipType === "child") {
+      body.parent = relationships;
+    }
+  }
   cy.request({
     method: "POST",
     url: apiUrl("group_create"),
     headers: headers,
-    body: {
-      name: name,
-      description: "Some group description",
-    },
+    body: body,
   });
 });
 
@@ -342,38 +362,55 @@ Cypress.Commands.add("deleteGroupAPI", (name) => {
   });
 });
 
-Cypress.Commands.add(
-  "createDatasetAPI",
-  (organization, name, isSubscribable) => {
-    const request = cy.request({
-      method: "POST",
-      url: apiUrl("package_create"),
-      headers: headers,
-      body: {
-        owner_org: organization,
-        name: name,
-        author: "datopian",
-        author_email: "datopian@datopian.com",
-        maintainer: "datopian",
-        maintainer_email: "datopian@datopian.com",
-        url: "Source not specified",
-        license_id: "notspecified",
-        tags: [{ display_name: "subscriable", name: "subscriable" }],
-      },
-    });
+Cypress.Commands.add("createDatasetAPI", (organization, name, otherFields) => {
+  const request = cy.request({
+    method: "POST",
+    url: apiUrl("package_create"),
+    headers: headers,
+    body: {
+      owner_org: organization,
+      name: name,
+      author: "csv",
+      author_email: "datopian@datopian.com",
+      maintainer: "datopian",
+      maintainer_email: "datopian@datopian.com",
+      url: "Source not specified",
+      license_id: "notspecified",
+      ...otherFields,
+    },
+  });
+});
 
-    if (!isSubscribable) {
-      request.then((response) => {
-        const datasetId = response.body.result.id;
-        cy.request({
-          method: "POST",
-          url: dataSubscriptionApiUrl(`nonsubscribable_datasets/${datasetId}`),
-          headers: headers,
-        });
-      });
+Cypress.Commands.add("datapusherSubmitAPI", (resourceId) => {
+  const request = cy.request({
+    method: "POST",
+    url: apiUrl("datapusher_submit"),
+    headers: headers,
+    body: {
+      resource_id: resourceId,
+    },
+  });
+});
+
+Cypress.Commands.add("datastoreSearchAPI", (resourceId) => {
+  const request = cy.request({
+    method: "POST",
+    url: apiUrl("datastore_search"),
+    headers: headers,
+    body: {
+      resource_id: resourceId,
+    },
+    failOnStatusCode: false
+  }).then((res) => {
+    if (res.status === 200) {
+      return true;
+    } else if (res.status === 404) {
+      return false;
+    } else {
+      throw new Error("Unexpected status code: " + res.status);
     }
-  }
-);
+  });
+});
 
 Cypress.Commands.add("createResourceAPI", (dataset, resource) => {
   const request = cy.request({

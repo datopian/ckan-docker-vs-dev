@@ -39,9 +39,12 @@ services:
     restart: always
     environment:
       - WRITE_ENGINE_URL=postgresql://postgres:postgres@db/datastore
-      - SQLALCHEMY_DATABASE_URI=postgresql://datapusher:ckandbpassword@db/datapusher_jobs
+      - SQLALCHEMY_DATABASE_URI=postgresql://datapusher:datapusherdbpassword@db/datapusher_jobs
     depends_on:
-      - db
+      ckan-dev:
+        condition: service_healthy
+      db:
+        condition: service_healthy
     ports:
       - "8800:8800"
 
@@ -62,8 +65,10 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
     ports:
-      - "5432:5432"
+      - "0.0.0.0:5432:5432"
      
   solr:
     container_name: ckan-vs-solr
