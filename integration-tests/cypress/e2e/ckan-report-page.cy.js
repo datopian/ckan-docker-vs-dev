@@ -86,6 +86,12 @@ describe("Listing of reports", () => {
     cy.contains(`1 report found for "${reportName} EDITED"`);
   });
 
+  it("Can check the reports in group", () => {
+    cy.viewport(1440, 720);
+    cy.visit(`/group/reports/${group}`);
+    cy.contains(reportName + " EDITED")
+  });
+
   it("Can delete a report", () => {
     cy.viewport(1440, 720);
     cy.visit("/report");
@@ -93,6 +99,7 @@ describe("Listing of reports", () => {
     cy.get('.modal-footer > .btn-primary').contains("Confirm").click();
     cy.contains("Report and visualizations were removed successfully.");
   });
+
 
   after(function () {
     cy.deleteDatasetAPI(dataset);
