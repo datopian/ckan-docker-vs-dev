@@ -14,7 +14,7 @@ const dataset = `${uuid()}-test-dataset`;
 const reportName = `${uuid()}-report`;
 const resourceId = uuid();
 
-describe("Listing of reports", () => {
+describe("Line chart", () => {
   before(function () {
     cy.createOrganizationAPI(org);
     cy.createGroupAPI(group);
@@ -108,8 +108,6 @@ describe("Listing of reports", () => {
       "DESCRIPTION TEXT BOX Adding variable here ",
     );
     cy.get(".title-vars select").eq(1).select("{measure|capitalize}");
-    cy.get("#item_type").select("break-line");
-    cy.get("#add-visualization-btn").click({ force: true });
     cy.get('button[name="save"]').click({ force: true });
     cy.visit(`querytool/public/${reportName}`);
     cy.contains("DESCRIPTION OF LINE CHART Adding variable hereCountCount");
