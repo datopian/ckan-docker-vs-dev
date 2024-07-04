@@ -22,8 +22,8 @@ describe("Listing of reports", () => {
       resources: [
         {
           format: "CSV",
-          name: "mexico-births",
-          description: "biostats",
+          name: "birth tests",
+          description: "birts",
           id: resourceId,
           url: "https://vital-strategies.l3.ckan.io/dataset/825b2161-180a-4875-b3be-09cf6c031f69/resource/a4304e94-8920-4c3a-a5cd-298132982198/download/births_08_17_table_mex.csv",
           format: "csv",
@@ -52,7 +52,7 @@ describe("Listing of reports", () => {
     // Open the Select2 dropdown
     cy.get(".select2-container").eq(1).click();
     // get div with role of option and data-value of dataset
-    cy.get(`div[role="option"][data-value="mexico-births"]`).click();
+    cy.get(`div[role="option"][data-value="${dataset}"]`).click();
     // select <select> tag of id #chart_resource and click on the first option
     cy.get("#chart_resource").select("birth tests");
     cy.get('input[value="Count"]').click();
@@ -127,7 +127,7 @@ describe("Listing of reports", () => {
       .its("body.result.sql_string")
       .should(
         "equal",
-        'SELECT * FROM "c435296d-2143-4575-aee3-6ae3356c3110" WHERE ("Education Level" = \'All levels\')',
+        `SELECT * FROM "${resourceId}" WHERE ("Education Level" = \'All levels\')`,
       );
     cy.getReportVizData(reportName).then((resp) => {
       expect(resp.status).to.eq(200);
