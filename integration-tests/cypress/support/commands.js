@@ -221,6 +221,14 @@ Cypress.Commands.add("deleteDataset", (datasetName) => {
   });
 });
 
+Cypress.Commands.add("deleteReport", (reportName) => {
+  cy.visit({ url: "/report" }).then(() => {
+    cy.contains(reportName).get(".btn").contains("Delete").click();
+    cy.get('.modal-footer > .btn-primary').contains("Confirm").click();
+    cy.contains("Report and visualizations were removed successfully.");
+  });
+});
+
 Cypress.Commands.add("purgeDataset", (datasetName) => {
   const request = cy.request({
     method: "POST",
@@ -313,6 +321,22 @@ Cypress.Commands.add("createOrganizationAPI", (name) => {
       name: name,
       description: "Some organization description",
     },
+  });
+});
+
+Cypress.Commands.add("getReportData", (name) => {
+  cy.request({
+    url: apiUrl("querytool_get") + `?name=${name}`,
+    headers: headers,
+  });
+});
+
+Cypress.Commands.add("getReportVizData", (name) => {
+  cy.request({
+    url: apiUrl("querytool_get_visualizations") + `?name=${name}`,
+    headers: headers,
+    timeout: 30000,
+    retryOnNetworkFailure: true,
   });
 });
 
