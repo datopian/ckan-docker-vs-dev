@@ -223,9 +223,18 @@ Cypress.Commands.add("deleteDataset", (datasetName) => {
 
 Cypress.Commands.add("deleteReport", (reportName) => {
   cy.visit({ url: "/report" }).then(() => {
-    cy.contains(reportName).get(".btn").contains("Delete").click();
-    cy.get('.modal-footer > .btn-primary').contains("Confirm").click();
-    cy.contains("Report and visualizations were removed successfully.");
+    cy.contains(reportName).parents(".content-box").within(() => {
+      cy.get(".btn").contains("Delete").click({ force: true });
+    });
+    cy.get('body').then($body => {
+      if ($body.find('.modal-footer > .btn-primary:contains("Confirm")').length > 0) {
+        cy.get('.modal-footer > .btn-primary').contains("Confirm").click();
+      } else {
+        cy.log('No modal present, proceeding without confirmation.');
+      }
+    });
+
+    cy.contains("Report and visualizations were removed successfully.").should('be.visible');
   });
 });
 
@@ -530,19 +539,21 @@ Cypress.Commands.add("facetFilter", (facetType, facetValue) => {
     });
 });
 
-Cypress.Commands.add("prepareFile", (dataset, file, format) => {
+Cypress.Commands.add("prepareFile", (dataset, file, format, resourceId = null, resourceName = file, resourceDescription = "Lorem Ipsum is simply dummy text of the printing and type") => {
   cy.fixture(`${file}`, "binary")
     .then(Cypress.Blob.binaryStringToBlob)
     .then((blob) => {
       var data = new FormData();
-      data.append("package_id", `${dataset}`);
-      data.append("name", `${file}`);
-      data.append("format", `${format}`);
-      data.append(
-        "description",
-        "Lorem Ipsum is simply dummy text of the printing and type"
-      );
-      data.append("upload", blob, `${file}`);
+      data.append("package_id", dataset);
+      data.append("name", resourceName);
+      data.append("format", format);
+      data.append("description", resourceDescription);
+      data.append("upload", blob, file);
+
+      if (resourceId) {
+        data.append("id", resourceId);
+      }
+
       var xhr = new XMLHttpRequest();
       xhr.withCredentials = true;
       xhr.open("POST", apiUrl("resource_create"));

@@ -7,29 +7,25 @@ Cypress.on("uncaught:exception", (err, runnable) => {
   return false;
 });
 
-const uuid = () => Math.random().toString(36).slice(2) + "-test";
+const randomName = () => Math.random().toString(36).slice(2);
+const uuid = () => {
+  const s4 = () => {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).padStart(4, '0');
+  };
+  return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+};
 const org = `${uuid()}${Cypress.env("ORG_NAME_SUFFIX")}`;
 const group = `${uuid()}${Cypress.env("GROUP_NAME_SUFFIX")}`;
-const dataset = `${uuid()}-test-dataset`;
-const reportName = `${uuid()}-report`;
+const dataset = `${randomName()}${Cypress.env("DATASET_NAME_SUFFIX")}`;
+const reportName = `${randomName()}${Cypress.env("REPORT_NAME_SUFFIX")}`;
 const resourceId = uuid();
 
 describe("Static reference chart", () => {
   before(function () {
     cy.createOrganizationAPI(org);
     cy.createGroupAPI(group);
-    cy.createDatasetAPI(org, dataset, {
-      resources: [
-        {
-          format: "CSV",
-          name: "diabetes",
-          description: "birts",
-          id: resourceId,
-          url: "https://vital-strategies.l3.ckan.io/dataset/1c2a452f-e64b-41c5-8d7c-a4974f5b6cbc/resource/bc7ed344-e79e-44aa-997a-40905cc54ab2/download/steps_portal_diabetes.csv",
-          format: "csv",
-        },
-      ],
-    });
+    cy.createDatasetAPI(org, dataset);
+    cy.prepareFile(dataset, "steps_portal_diabetes.csv", "csv", resourceId, "diabetes", "births");
     cy.datastoreSearchAPI(resourceId).then((resourceExists) => {
       cy.log("Resource exists: ", resourceExists);
       if (!resourceExists) {
@@ -62,7 +58,7 @@ describe("Static reference chart", () => {
     cy.get('select[name="data_filter_name_1"]').select("Indicator");
     cy.get('select[name="data_filter_value_1"]').trigger("mousedown");
     cy.wait(2000);
-    cy.get('select[name="data_filter_value_1"]').select(2);
+    cy.get('select[name="data_filter_value_1"]').select("Percentage who are currently taking any medication for diabetes prescribed by a health worker");
     cy.get('input[name="data_filter_alias_1"]').type("Indicator");
     cy.get('button[name="save"]').click({ force: true });
     cy.get("#item_type").select("chart");
@@ -116,7 +112,7 @@ describe("Static reference chart", () => {
   });
 
   after(function () {
-    //cy.deleteReport(reportName);
+    cy.deleteReport(reportName);
     cy.deleteDatasetAPI(dataset);
     cy.deleteGroupAPI(group);
     cy.deleteOrganizationAPI(org);

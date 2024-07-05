@@ -7,29 +7,25 @@ Cypress.on("uncaught:exception", (err, runnable) => {
   return false;
 });
 
-const uuid = () => Math.random().toString(36).slice(2) + "-test";
-const org = `${uuid()}${Cypress.env("ORG_NAME_SUFFIX")}`;
-const group = `${uuid()}${Cypress.env("GROUP_NAME_SUFFIX")}`;
-const dataset = `${uuid()}-test-dataset`;
-const reportName = `${uuid()}-report`;
+const randomName = () => Math.random().toString(36).slice(2);
+const uuid = () => {
+  const s4 = () => {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).padStart(4, '0');
+  };
+  return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+};
+const org = `${randomName()}${Cypress.env("ORG_NAME_SUFFIX")}`;
+const group = `${randomName()}${Cypress.env("GROUP_NAME_SUFFIX")}`;
+const dataset = `${randomName()}${Cypress.env("DATASET_NAME_SUFFIX")}`;
+const reportName = `${randomName()}${Cypress.env("REPORT_NAME_SUFFIX")}`;
 const resourceId = uuid();
 
 describe("Line chart", () => {
   before(function () {
     cy.createOrganizationAPI(org);
     cy.createGroupAPI(group);
-    cy.createDatasetAPI(org, dataset, {
-      resources: [
-        {
-          format: "CSV",
-          name: "birth tests",
-          description: "birts",
-          id: resourceId,
-          url: "https://vital-strategies.l3.ckan.io/dataset/825b2161-180a-4875-b3be-09cf6c031f69/resource/a4304e94-8920-4c3a-a5cd-298132982198/download/births_08_17_table_mex.csv",
-          format: "csv",
-        },
-      ],
-    });
+    cy.createDatasetAPI(org, dataset);
+    cy.prepareFile(dataset, "births_08_17_table_mex.csv", "csv", resourceId, "birth tests", "births");
     cy.datastoreSearchAPI(resourceId).then((resourceExists) => {
       cy.log("Resource exists: ", resourceExists);
       if (!resourceExists) {
@@ -54,7 +50,7 @@ describe("Line chart", () => {
     // get div with role of option and data-value of dataset
     cy.get(`div[role="option"][data-value="${dataset}"]`).click();
     // select <select> tag of id #chart_resource and click on the first option
-    cy.get("#chart_resource").select("birth tests");
+    cy.get("#chart_resource").select("birth tests", { force: true });
     cy.get('input[value="Count"]').click();
     //get select tag with name of data_filter_name_1 and then select the option inside it with value of Sex
     cy.contains("Add Filter").click();
