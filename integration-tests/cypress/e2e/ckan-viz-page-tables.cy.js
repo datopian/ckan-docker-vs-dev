@@ -131,7 +131,7 @@ describe("Line chart", () => {
     cy.get("#table_field_filter_value_1").focus().trigger("mousedown").trigger("mousedown").trigger("mousedown");
     cy.get('select[name="table_field_filter_value_1"]').select("2010");
     cy.get("#table_field_filter_alias_1").type("Year");
-    cy.get(".btn").contains("Update").click();
+    cy.get(".btn").contains("Update").click({ force: true });
 
     for (let i = 1; i <= 4; i++) {
       cy.get(
