@@ -13,6 +13,7 @@ export default defineConfig({
     ORG_NAME_SUFFIX: "_organization_test",
     GROUP_NAME_SUFFIX: "_group_test",
     DATASET_NAME_SUFFIX: "_dataset_test",
+    REPORT_NAME_SUFFIX: "_report_test",
   },
   e2e: {
     baseUrl: "http://ckan-dev:5000",
