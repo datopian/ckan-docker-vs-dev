@@ -48,6 +48,7 @@ describe("Listing of reports", () => {
     cy.visit("/report/new");
     cy.get("input[name=title]").type(reportName);
     cy.get("textarea[name=description]").type("Test Report Description");
+    cy.get('#field-group').select(group);
     // Open the Select2 dropdown
     cy.get(".select2-container").eq(1).click();
     // get div with role of option and data-value of dataset
@@ -69,7 +70,7 @@ describe("Listing of reports", () => {
   it("Can edit a report", () => {
     cy.viewport(1440, 720);
     cy.visit(`/report/edit/${reportName}`);
-    cy.get("input[name=title]").type(reportName + " EDITED");
+    cy.get("input[name=title]").clear().type(reportName + " EDITED");
     cy.get('button[name="save_data"]').click();
     cy.contains(reportName + " EDITED");
   });
