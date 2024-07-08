@@ -72,7 +72,7 @@ const dataset = `${randomName()}${Cypress.env("DATASET_NAME_SUFFIX")}`;
 const reportName = `${randomName()}${Cypress.env("REPORT_NAME_SUFFIX")}`;
 const resourceId = uuid();
 
-describe("Line chart", () => {
+describe("Tables", () => {
   before(function () {
     cy.createOrganizationAPI(org);
     cy.createGroupAPI(group);
