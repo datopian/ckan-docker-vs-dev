@@ -91,6 +91,11 @@ describe("Static reference chart", () => {
     cy.wait(5000);
     cy.get('button[name="save"]').click({ force: true });
     cy.visit(`querytool/public/${reportName}`);
+    cy.get('.annotation-text').contains('Minimum')
+    cy.get('.annotation-text').contains('Reference')
+    cy.get('.legendtext').contains('Under treatment')
+    cy.get('.ytitle').contains('Extra title')
+    cy.get('.xtick').contains('Age by Area')
     cy.getReportData(reportName)
       .its("body.result.filters")
       .should(

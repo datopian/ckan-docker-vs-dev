@@ -106,6 +106,11 @@ describe("Line chart", () => {
     cy.get(".title-vars select").eq(1).select("{measure|capitalize}");
     cy.get('button[name="save"]').click({ force: true });
     cy.visit(`querytool/public/${reportName}`);
+    cy.get('.ytitle').contains('Extra titleCount')
+    cy.get('.xtitle').contains('Extra titleCount')
+    cy.get('.annotation-text').contains('Average')
+    cy.get('.xtick').contains('2010')
+    cy.get('.legendtext').contains('All ages')
     cy.contains("DESCRIPTION OF LINE CHART Adding variable hereCountCount");
     cy.contains(
       "ADDITIONAL DESCRIPTION OF LINE CHART Adding variable hereAll levels",
