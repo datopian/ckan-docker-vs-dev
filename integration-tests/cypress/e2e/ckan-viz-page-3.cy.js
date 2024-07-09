@@ -108,6 +108,12 @@ describe("Static reference chart", () => {
     cy.wait(5000);
     cy.get('button[name="save"]').click({ force: true });
     cy.visit(`querytool/public/${reportName}`);
+    cy.get(".groups").contains(
+      "Percentage with raised BP (SBP >= 140 and/or DBP >= 90 mmHg) or currently on medication for raised BP",
+    );
+    cy.get('.annotation-text').contains('Reference')
+    cy.get(".legendtitletext").contains("Indicator");
+    cy.get('.xtick').contains('Rural 18-29')
     cy.getReportData(reportName)
       .its("body.result.filters")
       .should(
