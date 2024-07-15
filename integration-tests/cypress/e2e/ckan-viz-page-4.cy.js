@@ -78,7 +78,6 @@ describe("Misc Visualizations", () => {
 
   it("Can view an image visualization on public page", () => {
     cy.visit(`/querytool/public/${reportName}`);
-    cy.visit("/querytool/public/t7nj3v3jbp_report_test");
     cy.get('.html2canvas-ignore').should('be.visible');
     cy.get('.html2canvas-ignore').invoke('attr', 'src').should('match', /pink-blossoms.jpeg$/);
   });
