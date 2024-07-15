@@ -175,9 +175,9 @@ describe("Static reference chart", () => {
   });
 
   after(function () {
-    //cy.deleteReport(reportName);
-    //cy.deleteDatasetAPI(dataset);
-    //cy.deleteGroupAPI(group);
-    //cy.deleteOrganizationAPI(org);
+    cy.deleteReport(reportName);
+    cy.deleteDatasetAPI(dataset);
+    cy.deleteGroupAPI(group);
+    cy.deleteOrganizationAPI(org);
   });
 });
