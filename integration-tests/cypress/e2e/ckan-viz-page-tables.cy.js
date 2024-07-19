@@ -77,14 +77,21 @@ describe("Tables", () => {
     cy.createOrganizationAPI(org);
     cy.createGroupAPI(group);
     cy.createDatasetAPI(org, dataset);
-    cy.prepareFile(dataset, "births_08_17_table_mex.csv", "csv", resourceId, "birth tests", "births");
+    cy.prepareFile(
+      dataset,
+      "births_08_17_table_mex.csv",
+      "csv",
+      resourceId,
+      "birth tests",
+      "births"
+    );
     cy.datastoreSearchAPI(resourceId).then((resourceExists) => {
       cy.log("Resource exists: ", resourceExists);
       if (!resourceExists) {
         cy.datapusherSubmitAPI(resourceId);
       }
     });
-    cy.wait(25000)
+    cy.wait(25000);
   });
 
   beforeEach(function () {
@@ -95,23 +102,23 @@ describe("Tables", () => {
   it("Can create a table", () => {
     cy.viewport(1440, 720);
     cy.visit("/report/new");
-    cy.get("input[name=title]").type(reportName);
-    cy.get("textarea[name=description]").type("Test Report Description");
+    cy.get("input[name='title']").type(reportName);
+    cy.get("textarea[name='description']").type("Test Report Description");
     // Open the Select2 dropdown
     cy.get(".select2-container").eq(1).click();
     // get div with role of option and data-value of dataset
-    cy.get(`div[role="option"][data-value="${dataset}"]`).click();
+    cy.get(`div[role='option'][data-value='${dataset}']`).click();
     // select <select> tag of id #chart_resource and click on the first option
     cy.get("#chart_resource").select("birth tests", { force: true });
-    cy.get('input[value="Count"]').click();
+    cy.get("input[value='Count']").click();
     //get select tag with name of data_filter_name_1 and then select the option inside it with value of Sex
     cy.contains("Add Filter").click();
-    cy.get('select[name="data_filter_name_1"]').select("Education Level");
-    cy.get('select[name="data_filter_value_1"]').trigger("mousedown");
+    cy.get("select[name='data_filter_name_1']").select("Education Level");
+    cy.get("select[name='data_filter_value_1']").trigger("mousedown");
     cy.wait(2000);
-    cy.get('select[name="data_filter_value_1"]').select(5);
-    cy.get('input[name="data_filter_alias_1"]').type("Test");
-    cy.get('button[name="save"]').click({ force: true });
+    cy.get("select[name='data_filter_value_1']").select(5);
+    cy.get("input[name='data_filter_alias_1']").type("Test");
+    cy.get("button[name='save']").click({ force: true });
     cy.get("#item_type").select("table");
     cy.get("#add-visualization-btn").click({ force: true });
 
@@ -128,8 +135,12 @@ describe("Tables", () => {
     cy.get("#table_second_value_1").select("Sex");
     cy.get("#table_category_name_1").select("Place of Birth");
     cy.get("#table_field_filter_name_1").select("Year");
-    cy.get("#table_field_filter_value_1").focus().trigger("mousedown").trigger("mousedown").trigger("mousedown");
-    cy.get('select[name="table_field_filter_value_1"]').select("2010");
+    cy.get("#table_field_filter_value_1")
+      .focus()
+      .trigger("mousedown")
+      .trigger("mousedown")
+      .trigger("mousedown");
+    cy.get("select[name='table_field_filter_value_1']").select("2010");
     cy.get("#table_field_filter_alias_1").type("Year");
     cy.get(".btn").contains("Update").click({ force: true });
 
@@ -182,7 +193,7 @@ describe("Tables", () => {
       }
     }
 
-    cy.get('#save-visualization-btn').click({ force: true });
+    cy.get("#save-visualization-btn").click({ force: true });
     cy.contains("Visualizations Successfully updated.");
   });
 
@@ -198,47 +209,55 @@ describe("Tables", () => {
 
     for (let i = 1; i <= 4; i++) {
       if (tableValues2[i][3] === "") {
-        cy.get(
-          `tbody > :nth-child(${i}) > :nth-child(4)`
-        ).should("be.empty");
+        cy.get(`tbody > :nth-child(${i}) > :nth-child(4)`).should("be.empty");
       } else {
-        cy.get(
-          `tbody > :nth-child(${i}) > :nth-child(4)`
-        ).contains(tableValues2[i][3]);
+        cy.get(`tbody > :nth-child(${i}) > :nth-child(4)`).contains(
+          tableValues2[i][3]
+        );
       }
       if (tableValues2[i][4] === "") {
-        cy.get(
-          `tbody > :nth-child(${i}) > :nth-child(5)`
-        ).should("be.empty");
+        cy.get(`tbody > :nth-child(${i}) > :nth-child(5)`).should("be.empty");
       } else {
-        cy.get(
-          `tbody > :nth-child(${i}) > :nth-child(5)`
-        ).contains(tableValues2[i][4]);
+        cy.get(`tbody > :nth-child(${i}) > :nth-child(5)`).contains(
+          tableValues2[i][4]
+        );
       }
       if (tableValues2[i][5] === "") {
-        cy.get(
-          `tbody > :nth-child(${i}) > :nth-child(6)`
-        ).should("be.empty");
+        cy.get(`tbody > :nth-child(${i}) > :nth-child(6)`).should("be.empty");
       } else {
-        cy.get(
-          `tbody > :nth-child(${i}) > :nth-child(6)`
-        ).contains(tableValues2[i][5]);
+        cy.get(`tbody > :nth-child(${i}) > :nth-child(6)`).contains(
+          tableValues2[i][5]
+        );
       }
       if (tableValues2[i][6] === "") {
-        cy.get(
-          `tbody > :nth-child(${i}) > :nth-child(7)`
-        ).should("be.empty");
+        cy.get(`tbody > :nth-child(${i}) > :nth-child(7)`).should("be.empty");
       } else {
-        cy.get(
-          `tbody > :nth-child(${i}) > :nth-child(7)`
-        ).contains(tableValues2[i][6]);
+        cy.get(`tbody > :nth-child(${i}) > :nth-child(7)`).contains(
+          tableValues2[i][6]
+        );
       }
     }
   });
 
+  it("Filters work on public page", () => {
+    cy.visit(`/querytool/public/${reportName}`);
+    cy.wait(2000);
+    cy.get("select[id^='data_filter_value_']").trigger("mousedown").select(4);
+    cy.get("select[id^='data_filter_value_']").should("have.value", "  Middle");
+    cy.get(".btn").contains("Update").click({ force: true });
+    cy.get(".sorting_1").contains("Middle");
+    cy.get(".sorting_2").contains("All sexes");
+    cy.get(".odd > :nth-child(3) > div").contains("3935246");
+
+    cy.get("select[id^='viz_filter_value_']").trigger("mousedown").select(5);
+    cy.get(".sorting_1").contains("Middle");
+    cy.get(".sorting_2").contains("All sexes");
+    cy.get(".odd > :nth-child(3) > div").contains("4194038");
+  });
+
   after(function () {
     cy.deleteReport(reportName);
-    cy.deleteDatasetAPI(dataset)
+    cy.deleteDatasetAPI(dataset);
     cy.deleteGroupAPI(group);
     cy.deleteOrganizationAPI(org);
   });

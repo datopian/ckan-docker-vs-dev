@@ -97,9 +97,20 @@ describe("Line chart", () => {
     cy.get("#chart_field_dynamic_reference_factor_1").type(1.5, {
       force: true,
     });
+
     cy.get(".chart-actions").eq(0).get(".update-chart-btn").click();
+
+    cy.get("#chart_field_color_1_1").should("have.length", 1);
+    cy.get("#chart_field_color_1_2").should("have.length", 1);
+    cy.get("#chart_field_color_1_5").should("have.length", 1);
+
+    cy.get("#chart_field_color_1_1").should("have.value", "#ee00ee");
+    cy.get("#chart_field_color_1_2").should("have.value", "#00eeee");
+    cy.get("#chart_field_color_1_5").should("have.value", "#00ee00");
     cy.get("#item_type").select("text-box");
+
     cy.get("#add-visualization-btn").click({ force: true });
+
     cy.get("#text_box_description_1").type(
       "DESCRIPTION TEXT BOX Adding variable here ",
     );
