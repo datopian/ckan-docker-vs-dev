@@ -109,50 +109,91 @@ describe("Seed Command", () => {
   it("Can seed Querytool reports", () => {
     cy.visit("/report");
 
-    cy.contains("Cholesterol data by demographics");
-    cy.contains("Hypertension data by demographics");
-    cy.contains("Diet data by demographics");
-    cy.contains("Alcohol consumption data by demographics");
+    cy.get("#field-giant-search")
+      .type("Cholesterol data by demographics")
+      .type("{enter}");
+    cy.contains("1 report found");
+
+    cy.get("#field-giant-search").clear();
+    cy.get("#field-giant-search")
+      .type("Diet data by demographics")
+      .type("{enter}");
+    cy.contains("1 report found");
+
+    cy.get("#field-giant-search").clear();
+    cy.get("#field-giant-search")
+      .type("Physical activity data by demographics")
+      .type("{enter}");
+    cy.contains("1 report found");
+
+    cy.get("#field-giant-search").clear();
+    cy.get("#field-giant-search")
+      .type("Alcohol consumption data by demographics")
+      .type("{enter}");
+    cy.contains("1 report found");
   });
 
   it("Can seed Querytool visualizations", () => {
     cy.visit("/report");
 
-    cy.contains("Cholesterol data by demographics").then((el) => {
-        cy.get(el).parent().find("a").contains("View").click();
-    });
+    cy.get("#field-giant-search")
+      .type("Cholesterol data by demographics")
+      .type("{enter}");
+
+    cy.get(".btn").contains("View").click();
+
     cy.contains("Cholesterol data by demographics");
-    cy.contains("A selected indicator on cholesterol levels is compared across all different demographic groups. For example:");
-    cy.contains("What percentage of participants are on treatment for raised cholesterol across sex, age and location (urban versus rural)?");
+    cy.contains(
+      "A selected indicator on cholesterol levels is compared across all different demographic groups. For example:"
+    );
+    cy.contains(
+      "What percentage of participants are on treatment for raised cholesterol across sex, age and location (urban versus rural)?"
+    );
 
     cy.get(".plot-container.plotly").should("exist");
     cy.get(".viz-container").find(".item").should("have.length", 8);
 
     cy.contains("Percentage who had their cholesterol measured by sex");
     cy.contains("Demographic Characteristic");
-    cy.contains("The indicator value and confidence intervals are presented in the following table.");
-    cy.contains("Percentage who had their cholesterol measured , estimate and confidence intervals");
+    cy.contains(
+      "The indicator value and confidence intervals are presented in the following table."
+    );
+    cy.contains(
+      "Percentage who had their cholesterol measured , estimate and confidence intervals"
+    );
 
-    cy.get("table tbody").find("tr").first().within(() => {
-      cy.get("td").eq(0).should("contain.text", "Men - Measured");
+    cy.get("table tbody")
+      .find("tr")
+      .first()
+      .within(() => {
+        cy.get("td").eq(0).should("contain.text", "Men - Measured");
         cy.get("td").eq(1).should("contain.text", "75.5");
         cy.get("td").eq(2).should("contain.text", "72.9");
         cy.get("td").eq(3).should("contain.text", "78.1");
-    });
+      });
 
-    cy.contains("Percentage who had their cholesterol measured by age group").then((el) => {
+    cy.contains(
+      "Percentage who had their cholesterol measured by age group"
+    ).then((el) => {
       cy.get(el).parent().contains("18-69");
       cy.get(el).parent().contains("18-29");
       cy.get(el).parent().contains("30-49");
       cy.get(el).parent().contains("50-69");
     });
 
-    cy.contains("Percentage who had their cholesterol measured for all demographic groups").then((el) => {
-      cy.get(el).parent().find("table tbody").find("tr").first().within(() => {
-        cy.get("td").eq(0).should("contain.text", "18-29");
-        cy.get("td").eq(1).should("contain.text", "80.9");
-        cy.get("td").eq(2).should("contain.text", "19.1");
-      });
+    cy.contains(
+      "Percentage who had their cholesterol measured for all demographic groups"
+    ).then((el) => {
+      cy.get(el)
+        .parent()
+        .find("table tbody")
+        .find("tr")
+        .first()
+        .within(() => {
+          cy.get("td").eq(0).should("contain.text", "18-29");
+          cy.get("td").eq(1).should("contain.text", "80.9");
+          cy.get("td").eq(2).should("contain.text", "19.1");
+        });
     });
   });
 });
