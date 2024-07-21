@@ -18,18 +18,8 @@ describe("Listing of reports", () => {
   before(function () {
     cy.createOrganizationAPI(org);
     cy.createGroupAPI(group);
-    cy.createDatasetAPI(org, dataset, {
-      resources: [
-        {
-          format: "CSV",
-          name: "biostats",
-          description: "biostats",
-          id: resourceId,
-          url: "https://people.sc.fsu.edu/~jburkardt/data/csv/ford_escort.csv",
-          format: "csv",
-        },
-      ],
-    });
+    cy.createDatasetAPI(org, dataset);
+    cy.prepareFile(dataset, "ford_escort.csv", "csv", resourceId, "biostats", "biostats");
     cy.datastoreSearchAPI(resourceId).then((resourceExists) => {
       cy.log("Resource exists: ", resourceExists);
       if (!resourceExists) {
