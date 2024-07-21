@@ -23,6 +23,18 @@ LOGFILE="/var/log/seed_script.log"
 
     echo "All endpoints are ready!"
 
+    echo "Waiting for the database to be ready..."
+    while true; do
+        pg_isready -h ckan-vs-db -p 5432 -U ckandbuser -d ckandb
+        if [ $? -eq 0 ]; then
+            echo "Database is ready!"
+            break
+        else
+            echo "Still waiting for the database"
+            sleep 5
+        fi
+    done
+
     # Generate a token
     echo "Generating token..."
     token=$(ckan -c ckan.ini user token add ckan_admin seed | awk '/API Token created:/ {getline; print $1}' | tr -d '\n' | tr -d '\r')
