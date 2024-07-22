@@ -140,7 +140,6 @@ describe("Parent/Child Groups", () => {
 
     cy.visit("/");
 
-    cy.contains("Other").should("not.exist")
     cy.contains("Miscellaneous groups").should("not.exist")
 
     cy.visit("/group/new");

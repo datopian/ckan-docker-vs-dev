@@ -7,29 +7,25 @@ Cypress.on("uncaught:exception", (err, runnable) => {
   return false;
 });
 
-const uuid = () => Math.random().toString(36).slice(2) + "-test";
-const org = `${uuid()}${Cypress.env("ORG_NAME_SUFFIX")}`;
-const group = `${uuid()}${Cypress.env("GROUP_NAME_SUFFIX")}`;
-const dataset = `${uuid()}-test-dataset`;
-const reportName = `${uuid()}-report`;
+const randomName = () => Math.random().toString(36).slice(2);
+const uuid = () => {
+  const s4 = () => {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).padStart(4, '0');
+  };
+  return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+};
+const org = `${randomName()}${Cypress.env("ORG_NAME_SUFFIX")}`;
+const group = `${randomName()}${Cypress.env("GROUP_NAME_SUFFIX")}`;
+const dataset = `${randomName()}-test-dataset`;
+const reportName = `${randomName()}-report`;
 const resourceId = uuid();
 
 describe("Listing of reports", () => {
   before(function () {
     cy.createOrganizationAPI(org);
     cy.createGroupAPI(group);
-    cy.createDatasetAPI(org, dataset, {
-      resources: [
-        {
-          format: "CSV",
-          name: "biostats",
-          description: "biostats",
-          id: resourceId,
-          url: "https://people.sc.fsu.edu/~jburkardt/data/csv/ford_escort.csv",
-          format: "csv",
-        },
-      ],
-    });
+    cy.createDatasetAPI(org, dataset);
+    cy.prepareFile(dataset, "ford_escort.csv", "csv", resourceId, "biostats", "biostats");
     cy.datastoreSearchAPI(resourceId).then((resourceExists) => {
       cy.log("Resource exists: ", resourceExists);
       if (!resourceExists) {
@@ -96,7 +92,9 @@ describe("Listing of reports", () => {
   it("Can delete a report", () => {
     cy.viewport(1440, 720);
     cy.visit("/report");
-    cy.contains(reportName + " EDITED").get(".btn").contains("Delete").click();
+    cy.contains(reportName + " EDITED").parent().within(() => {
+      cy.get(".delete-querytool-btn").click();
+    });
     cy.get('.modal-footer > .btn-primary').contains("Confirm").click();
     cy.contains("Report and visualizations were removed successfully.");
   });

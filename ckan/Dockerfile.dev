@@ -38,7 +38,7 @@ RUN pip install -e git+https://github.com/ckan/ckanext-pdfview.git#egg=ckanext-p
     pip install -r https://raw.githubusercontent.com/ckan/ckanext-geoview/e2a1cc9a323b4433a8312e160875e80c89f82251/pip-requirements.txt && \
     pip install -r https://raw.githubusercontent.com/datopian/ckanext-s3filestore/ckan-2.10/requirements.txt && \
     pip install -e git+https://github.com/datopian/ckanext-s3filestore.git@ckan-2.10#egg=ckanext-s3filestore && \
-    pip install --no-cache-dir -e git+https://github.com/datopian/ckanext-querytool.git@2507e6b6f711360d33ceec41d2695f92f6c5cd28#egg=ckanext-querytool && \
+    pip install --no-cache-dir -e git+https://github.com/datopian/ckanext-querytool.git@503e3fbf8ef6e335f409e4e1de52fb75318c90ae#egg=ckanext-querytool && \
     pip install -r https://raw.githubusercontent.com/datopian/ckanext-querytool/dev/python3-upgrade/requirements.txt && \
     pip install -e git+https://github.com/datopian/ckanext-gtm.git#egg=ckanext-gtm && \
     pip install -e git+https://github.com/datopian/ckanext-sentry.git@3ed3f5f251e774810df977746ed3c8fa834b7d48#egg=ckanext-sentry && \

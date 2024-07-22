@@ -266,7 +266,9 @@ Cypress.Commands.add(
     if (!groupName) {
       groupName = getRandomGroupName();
     }
+
     cy.visit("/group/new");
+    cy.wait(2000);
     cy.get("#field-name").type(groupName);
     cy.get("#field-description").type(`Description for ${groupName}`);
     cy.get("#field-additional_description").type(
@@ -279,9 +281,11 @@ Cypress.Commands.add(
       if (relationships) {
         if (relationshipType === "parent") {
           for (let i = 0; i < relationships.length; i++) {
-            cy.get("#s2id_autogen1").type(relationships[i]);
-            cy.wait(1000);
-            cy.get("#s2id_autogen1").type("{enter}");
+            cy.get("#s2id_field-children").within(() => {
+                cy.get(".select2-input").type(relationships[i], { force: true });
+                cy.wait(1000);
+                cy.get(".select2-input").type("{enter}", { force: true });
+            });
           }
         } else if (relationshipType === "child") {
           cy.get("#field-parent").select(relationships);
