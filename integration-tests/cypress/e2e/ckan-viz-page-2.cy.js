@@ -14,8 +14,8 @@ const uuid = () => {
   };
   return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 };
-const org = `${uuid()}${Cypress.env("ORG_NAME_SUFFIX")}`;
-const group = `${uuid()}${Cypress.env("GROUP_NAME_SUFFIX")}`;
+const org = `${randomName()}${Cypress.env("ORG_NAME_SUFFIX")}`;
+const group = `${randomName()}${Cypress.env("GROUP_NAME_SUFFIX")}`;
 const dataset = `${randomName()}${Cypress.env("DATASET_NAME_SUFFIX")}`;
 const reportName = `${randomName()}${Cypress.env("REPORT_NAME_SUFFIX")}`;
 const resourceId = uuid();

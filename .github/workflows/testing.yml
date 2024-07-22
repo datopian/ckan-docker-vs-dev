@@ -42,12 +42,6 @@ jobs:
           while ! docker exec ckan-vs-db pg_isready -U ckandbuser -d ckandb; do
             sleep 1
           done
-      - name: Copy reports.csv to ckan-vs-db
-        run: docker cp ckan/setup/reports.csv ckan-vs-db:/reports.csv
-      - name: Add Reports
-        run: |
-          docker exec -e PGPASSWORD=postgres ckan-vs-db psql -U postgres -d ckandb -c "\
-          \copy ckanext_querytool FROM '/reports.csv' DELIMITER ',' CSV HEADER;"
       - name: Run Integration tests 🧪
         uses: cypress-io/github-action@v6
         with:
