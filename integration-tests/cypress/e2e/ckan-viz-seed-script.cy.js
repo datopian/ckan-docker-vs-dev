@@ -154,6 +154,29 @@ describe("Seed Command", () => {
     cy.get(".viz-container").find(".item").should("have.length", 8);
 
     cy.contains("Percentage who had their cholesterol measured by sex");
+
+    const annotationIndexes = {
+      0: "translate(156,30)",
+      1: "translate(608,233)",
+      2: "translate(336,41)",
+      3: "translate(788,223)",
+    };
+
+    cy.get("h3")
+      .contains("Percentage who had their cholesterol measured by sex")
+      .first()
+      .parent()
+      .within(() => {
+        cy.get(".annotation").each(($el, index) => {
+          cy.wrap($el).within(() => {
+            cy.get(".cursor-pointer").should(
+              "have.attr",
+              "transform",
+              annotationIndexes[index]
+            );
+          });
+        });
+      });
     cy.contains("Demographic Characteristic");
     cy.contains(
       "The indicator value and confidence intervals are presented in the following table."
